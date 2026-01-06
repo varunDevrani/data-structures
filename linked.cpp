@@ -9,6 +9,8 @@ Node* createNode(int data);
 
 unsigned int length(Node* head);
 
+int valueAtIndex(Node* head, unsigned int index);
+
 void printList(Node* head);
 
 void insertAtStart(Node** head, int data);
@@ -21,6 +23,48 @@ void deleteAt(Node** head, unsigned int index);
 
 void deleteList(Node* head);
 
+void swap(Node** head, unsigned int lhs, unsigned rhs) {
+	if(lhs >= length(*head) || rhs >= length(*head)) {
+		std::cout << "Error: Indices out of bounds" << std::endl;
+		return;
+	}
+
+	int lhs_value = valueAtIndex(*head, lhs);
+	int rhs_value = valueAtIndex(*head, rhs);
+
+	Node** iterator = head;
+	for(unsigned int i = 0; i < lhs; i++) {
+		iterator = &((*iterator)->next);
+	}
+	(*iterator)->data = rhs_value;
+
+	iterator = head;
+	for(unsigned int i = 0; i < rhs; i++) {
+		iterator = &((*iterator)->next);
+	}
+	(*iterator)->data = lhs_value;
+}
+
+void bubbleSort(Node** head) {
+	unsigned int size = length(*head);
+
+	for(unsigned int i = 0; i < size; i++) {
+		for(unsigned int j = 0; j < size - 1; j++) {
+			if(valueAtIndex(*head, j) > valueAtIndex(*head, j+1)) {
+				swap(head, j, j+1);
+			}
+		}
+	}
+}
+
+void print_recursive(Node* head) {
+	if(head == NULL) {
+		return;
+	}
+
+	print_recursive(head->next);
+	std::cout << head->data << " ";
+}
 
 
 int main() {
@@ -30,27 +74,33 @@ int main() {
 	insertAtEnd(&head, 25);
 	insertAtEnd(&head, 90);
 	insertAtEnd(&head, 40);	
-
 	insertAtStart(&head, 11);
 	insertAtStart(&head, 12);
 	insertAtStart(&head, 13);
+
+	bubbleSort(&head);
 	
 	printList(head);
 
-
-
-	deleteAt(&head, 0);
-	deleteAt(&head, length(head) - 1);
-	printList(head);	
-	deleteAtEnd(&head);
-	printList(head);
-
-	deleteList(head);
+	for(unsigned int i = 0; i < length(head); i++) {
+		std::cout << valueAtIndex(head, i) << std::endl;
+	}
+	print_recursive(head);
 
 	return 0;
 }
 
+int valueAtIndex(Node* head, unsigned int index) {
+	if(index >= length(head)) {
+		std::cerr << "Error: Index out of bounds" << std::endl;
+		return -1;
+	}
 
+	for(unsigned int i = 0; i < index; i++) {
+		head = head->next;
+	}
+	return head->data;
+}
 
 Node* createNode(int data) {
 	return new Node{data, NULL};
@@ -83,7 +133,7 @@ void insertAt(Node** head, unsigned int index, int data) {
 		return;
 	}
 
-		unsigned int count = 0;	
+	unsigned int count = 0;	
 	while(*head != NULL) {
 		if(count == index) {
 			break;
