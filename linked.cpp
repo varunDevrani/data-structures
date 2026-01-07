@@ -67,6 +67,31 @@ void print_recursive(Node* head) {
 }
 
 
+void reverse(Node** head) {
+	Node* current = *head;
+	Node* prev = NULL;
+	
+	while(current != NULL) {
+		Node* next = (current)->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+	*head = prev;
+}
+
+void reverse_recursive(Node** head, Node* curr, Node* prev=NULL) {
+	if(curr == NULL) {
+		*head = prev;
+		return;
+	}
+			
+	Node* next = curr->next;
+	curr->next = prev;
+	
+	reverse_recursive(head, next, curr);
+}
+
 int main() {
 
 	Node* head = NULL;	
@@ -78,7 +103,7 @@ int main() {
 	insertAtStart(&head, 12);
 	insertAtStart(&head, 13);
 
-	bubbleSort(&head);
+	reverse_recursive(&head, head);
 	
 	printList(head);
 
