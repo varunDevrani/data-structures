@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cstring>
 
 struct Node {
 	char data;
@@ -60,15 +60,22 @@ int main() {
 
 	Stack* stack = new Stack{};
 
-	for(unsigned int i = 0; i < 10; i++) {
-		push(stack, char(65 + i));
-		traverse(stack);
+	const char* str = "helloworld";
+	unsigned int length = std::strlen(str);	
+	std::cout << length << std::endl;
+	
+	for(unsigned int i = 0; i < length; i++) {
+		push(stack, str[i]);
 	}
 
-	for(unsigned int i = 0; i <= 13; i++) {
-		pop(stack);
-		traverse(stack);
+	char reversedStr[length + 1];
+	for(unsigned int i = 0; i < length; i++) {
+		reversedStr[i] = pop(stack);
 	}
+	reversedStr[length] = 0;
+
+	std::cout << str << std::endl;
+	std::cout << reversedStr << std::endl;
 
 	return 0;
 }
